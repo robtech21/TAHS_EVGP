@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Data Analytics</title>
+
+    <link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <div id="background"></div>
+    <div style="z-index: 1;" id="windows"></div>
+
+    <template id="graph">
+        <p id="header" style="background-color: rgb(42, 42, 42); width: calc(100% - 6px); text-align: left; cursor: move;
+        padding-bottom: 6px; padding-top: 6px; padding-left: 6px; margin: 0px; font-weight: bold;
+        font-family: monospace; color: lightgray; height: 16px;">Header</p>
+
+        <p style="font-weight: bold; color: white; position: absolute; top: 0px; right: 0px; margin: 0px; padding: 2px;
+        padding-left: 4px; padding-bottom: 4px; cursor: pointer;" onclick="
+            for(let i = 0; i < graphs.length; i++) {
+                let canvas = this.parentElement.getElementsByTagName('canvas')[0];
+                if(graphs[i][1] == canvas){
+                    graphs.splice(i, 1);
+                    break;
+                }
+            }
+            this.parentElement.remove();
+        "><b>✕&nbsp;</b></p>
+
+        <canvas style="background-color: white; margin: 0px; padding: 0px; display: block;">
+
+        </canvas>
+    </template>
+
+    <template id="analytics">
+        <p id="header" style="background-color: rgb(42, 42, 42); width: calc(100% - 6px); text-align: left; cursor: move;
+        padding-bottom: 6px; padding-top: 6px; padding-left: 6px; margin: 0px; font-weight: bold;
+        font-family: monospace; color: lightgray; height: 30px;">Header</p>
+
+        <p style="font-weight: bold; color: white; position: absolute; top: 0px; right: 0px; margin: 0px; padding: 2px;
+        padding-left: 4px; padding-bottom: 4px; cursor: pointer;" onclick="this.parentElement.remove();"><b>✕&nbsp;</b></p>
+        <span style="display: block;"></span>
+
+        <div style="position: absolute; width: 100%; height: calc(100% - 28px); top: 28px; left: 0px; background-color: white;
+        font-family: monospace; overflow: hidden; padding-left: 2px;">
+            <p>test</p>
+        </div>
+    </template>
+
+    <template id="luigi">
+        <p id="header" style="background-color: rgb(42, 42, 42); width: calc(100% - 6px); text-align: left; cursor: move;
+        padding-bottom: 6px; padding-top: 6px; padding-left: 6px; margin: 0px; font-weight: bold;
+        font-family: monospace; color: lightgray; height: 30px;">Header</p>
+
+        <p style="font-weight: bold; color: white; position: absolute; top: 0px; right: 0px; margin: 0px; padding: 2px;
+        padding-left: 4px; padding-bottom: 4px; cursor: pointer;" onmousemove="this.parentElement.style.top = Math.random()*500 + 'px'; this.parentElement.style.left = Math.random()*500 + 'px';" onclick="alert('nice-a try');"><b>✕&nbsp;</b></p>
+        <span style="display: block;"></span>
+
+        <div style="position: absolute; width: 100%; height: calc(100% - 28px); top: 28px; left: 0px; background-color: white;
+        font-family: monospace; overflow: hidden; padding-left: 2px;">
+            <image style="position: absolute; left: 0px; top: 0px; width: 100%; height: 100%;" src="assets/luigi-dance.gif"></image>
+        </div>
+    </template>
+
+    <!--Make a new template for gauge properties-->
+
+    <template id="properties">
+        <p id="header" style="background-color: rgb(42, 42, 42); width: calc(100% - 6px); text-align: left; cursor: move;
+        padding-bottom: 6px; padding-top: 6px; padding-left: 6px; margin: 0px; font-weight: bold;
+        font-family: monospace; color: lightgray; height: 30px;">Header</p>
+
+        <p style="font-weight: bold; color: white; position: absolute; top: 0px; right: 0px; margin: 0px; padding: 2px;
+        padding-left: 4px; padding-bottom: 4px; cursor: pointer;" onclick="this.parentElement.remove();"><b>✕&nbsp;</b></p>
+        <span style="display: block;"></span>
+
+        <div style="position: absolute; width: 100%; height: calc(100% - 28px); top: 28px; left: 0px; background-color: white;
+        font-family: monospace; overflow: hidden; padding-left: 2px;">
+            <p style="margin: 0px;">Step X: <input style="width: 50px; font-family: monospace;" type="text" oninput="propertiesById(parseInt(this.parentElement.parentElement.parentElement.getElementsByTagName('span')[0].innerHTML))
+            .stepX = parseFloat(this.value)"></p>
+            <p style="margin: 0px;">Step Y: <input style="width: 50px; font-family: monospace;" type="text" oninput="propertiesById(parseInt(this.parentElement.parentElement.parentElement.getElementsByTagName('span')[0].innerHTML))
+            .stepY = parseFloat(this.value)"></p>
+            <p style="margin: 0px;">Duration (sec): <input style="width: 50px; font-family: monospace;" type="text" oninput="propertiesById(parseInt(this.parentElement.parentElement.parentElement.getElementsByTagName('span')[0].innerHTML))
+            .duration = parseFloat(this.value)"></p>
+            <p style="margin: 0px;">Relative Time <input type="checkbox" onchange="propertiesById(parseInt(this.parentElement.parentElement.parentElement.getElementsByTagName('span')[0].innerHTML))
+            .relativeTime = this.checked"></p>
+            <br>
+            <p style="margin: 0px;">Color:<br><input style="width: 200px; font-family: monospace;" type="text" oninput="propertiesById(parseInt(this.parentElement.parentElement.parentElement.getElementsByTagName('span')[0].innerHTML))
+            .color = this.value"></p>
+            <p style="margin: 0px;">Background Color:<br><input style="width: 200px; font-family: monospace;" type="text" oninput="propertiesById(parseInt(this.parentElement.parentElement.parentElement.getElementsByTagName('span')[0].innerHTML))
+            .backgroundColor = this.value"></p>
+            <p style="margin: 0px;">Line Thickness: <input style="width: 50px; font-family: monospace;" type="text" oninput="propertiesById(parseInt(this.parentElement.parentElement.parentElement.getElementsByTagName('span')[0].innerHTML))
+            .lineThickness = parseFloat(this.value)"></p>
+            
+        </div>
+    </template>
+
+    <template id="gaugeProperties">
+        <p id="header" style="background-color: rgb(42, 42, 42); width: calc(100% - 6px); text-align: left; cursor: move;
+        padding-bottom: 6px; padding-top: 6px; padding-left: 6px; margin: 0px; font-weight: bold;
+        font-family: monospace; color: lightgray; height: 30px;">Header</p>
+
+        <p style="font-weight: bold; color: white; position: absolute; top: 0px; right: 0px; margin: 0px; padding: 2px;
+        padding-left: 4px; padding-bottom: 4px; cursor: pointer;" onclick="this.parentElement.remove();"><b>✕&nbsp;</b></p>
+        <span style="display: block;"></span>
+
+        <div style="position: absolute; width: 100%; height: calc(100% - 28px); top: 28px; left: 0px; background-color: white;
+        font-family: monospace; overflow: hidden; padding-left: 2px;">
+            <p style="margin: 0px;">Min: <input style="width: 50px; font-family: monospace;" type="text" oninput="propertiesById(parseInt(this.parentElement.parentElement.parentElement.getElementsByTagName('span')[0].innerHTML))
+            .min = parseFloat(this.value)"></p>
+            <p style="margin: 0px;">Max: <input style="width: 50px; font-family: monospace;" type="text" oninput="propertiesById(parseInt(this.parentElement.parentElement.parentElement.getElementsByTagName('span')[0].innerHTML))
+            .max = parseFloat(this.value)"></p>
+            <p style="margin: 0px;">Duration (sec): <input style="width: 50px; font-family: monospace;" type="text" oninput="propertiesById(parseInt(this.parentElement.parentElement.parentElement.getElementsByTagName('span')[0].innerHTML))
+            .duration = parseFloat(this.value)"></p>
+            <p style="margin: 0px;">Color:<br><input style="width: 200px; font-family: monospace;" type="text" oninput="propertiesById(parseInt(this.parentElement.parentElement.parentElement.getElementsByTagName('span')[0].innerHTML))
+            .color = this.value"></p>
+            <p style="margin: 0px;">Background Color:<br><input style="width: 200px; font-family: monospace;" type="text" oninput="propertiesById(parseInt(this.parentElement.parentElement.parentElement.getElementsByTagName('span')[0].innerHTML))
+            .backgroundColor = this.value"></p>
+            <p style="margin: 0px;">Line Thickness: <input style="width: 50px; font-family: monospace;" type="text" oninput="propertiesById(parseInt(this.parentElement.parentElement.parentElement.getElementsByTagName('span')[0].innerHTML))
+            .lineThickness = parseFloat(this.value)"></p>
+            
+        </div>
+    </template>
+
+    <div id="contextMenu">
+        <p>Test</p>
+    </div>
+
+    <div id="topbar">
+        <span style="margin-left: 4px;" class="context" onclick="contextMenu('cm_window>graph')">
+            Graph
+        </span>
+        <span style="margin-right: 0px;">|</span>
+        <span class="context" onclick="contextMenu('cm_window>gauge')">
+            Gauge
+        </span>
+        <span style="margin-right: 0px;">|</span>
+        <span class="context" onclick="createWindow('Analytics', 'null')">
+            Analytics
+        </span>
+        <span style="margin-right: 0px;">|</span>
+        <span class="context" onclick="recentGraph = -1; createWindow('luigi', 'null')">
+            Moral Support
+        </span>
+    </div>
+
+    <p id="test"></p>
+
+    <!-- CONTEXT MENU TEMPLATES -->
+
+    <template id="cm_window">
+        <ul>
+            <li class="context" onclick="contextMenu('cm_window>graph')">
+                Graph
+            </li>
+
+            <li class="context" onclick="createWindow('cm_window>gauge')">
+                Gauge
+            </li>
+        </ul>
+    </template>
+
+    <template id="cm_window>graph">
+        <ul>
+            <li onclick="createWindow('Graph', 'Sec')">
+                Seconds
+            </li>
+
+            <li onclick="createWindow('Graph', 'Ah')">
+                Amp-Hours
+            </li>
+
+            <li onclick="createWindow('Graph', 'V')">
+                Voltage
+            </li>
+
+            <li onclick="createWindow('Graph', 'A')">
+                Amperes
+            </li>
+
+            <li onclick="createWindow('Graph', 'S')">
+                Speed
+            </li>
+
+            <li onclick="createWindow('Graph', 'D')">
+                Distance
+            </li>
+
+            <li onclick="createWindow('Graph', 'Deg')">
+                Temperature (C)
+            </li>
+
+            <li onclick="createWindow('Graph', 'RPM')">
+                PAS RPM
+            </li>
+
+            <li onclick="createWindow('Graph', 'HW')">
+                Human Watts
+            </li>
+
+            <li onclick="createWindow('Graph', 'Nm')">
+                PAS Torque Newton-meters
+            </li>
+
+            <li onclick="createWindow('Graph', 'ThI')">
+                Throttle In Voltage
+            </li>
+
+            <li onclick="createWindow('Graph', 'ThO')">
+                Throttle Out Voltage
+            </li>
+
+            <li onclick="createWindow('Graph', 'Acc')">
+                Acceleration
+            </li>
+        </ul>
+    </template>
+
+    <template id="cm_window>gauge">
+        <ul>
+            <li onclick="createWindow('Gauge', 'Sec')">
+                Seconds
+            </li>
+
+            <li onclick="createWindow('Gauge', 'Ah')">
+                Amp-Hours
+            </li>
+
+            <li onclick="createWindow('Gauge', 'V')">
+                Voltage
+            </li>
+
+            <li onclick="createWindow('Gauge', 'A')">
+                Amperes
+            </li>
+
+            <li onclick="createWindow('Gauge', 'S')">
+                Speed
+            </li>
+
+            <li onclick="createWindow('Gauge', 'D')">
+                Distance
+            </li>
+
+            <li onclick="createWindow('Gauge', 'Deg')">
+                Temperature (C)
+            </li>
+
+            <li onclick="createWindow('Gauge', 'RPM')">
+                PAS RPM
+            </li>
+
+            <li onclick="createWindow('Gauge', 'HW')">
+                Human Watts
+            </li>
+
+            <li onclick="createWindow('Gauge', 'Nm')">
+                PAS Torque Newton-meters
+            </li>
+
+            <li onclick="createWindow('Gauge', 'ThI')">
+                Throttle In Voltage
+            </li>
+
+            <li onclick="createWindow('Gauge', 'ThO')">
+                Throttle Out Voltage
+            </li>
+
+            <li onclick="createWindow('Gauge', 'Acc')">
+                Acceleration
+            </li>
+        </ul>
+    </template>
+
+    <template id="cm_graph">
+        <ul>
+            <li onclick="createWindow('Properties', 'null')">
+                Properties
+            </li>
+            <li onclick="makeTransparent()">
+                Transparency
+            </li>
+            <li class="context" onclick="contextMenu('cm_graph>rotation')">
+                Rotation
+            </li>
+        </ul>
+    </template>
+
+    <template id="cm_graph>rotation">
+        <ul>
+            <li onclick="rotate(0, false)">
+                0
+            </li>
+            <li onclick="rotate(90, false)">
+                90
+            </li>
+            <li onclick="rotate(180, false)">
+                180
+            </li>
+            <li onclick="rotate(270, false)">
+                270
+            </li>
+            <li onclick="rotate(45, true)">
+                +45
+            </li>
+        </ul>
+    </template>
+
+    <template id="cm_luigi">
+        <ul>
+            <li class="context" onclick="contextMenu('cm_luigi')">
+                recursion
+            </li>
+            <li onclick="createWindow('luigi', 'null'); alert('no-a u')">
+                okay fine you can get rid of me
+            </li>
+        </ul>
+    </template>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="loader.js"></script>
+</body>
